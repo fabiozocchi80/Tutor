@@ -57,11 +57,19 @@ export default function App() {
           return updated;
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Chat error:', error);
+      let errorMessage = "Si è verificato un errore nella sessione. Riprova tra un momento.";
+      
+      if (error?.message?.includes('GEMINI_API_KEY')) {
+        errorMessage = "Chiave API mancante. Assicurati di aver configurato GEMINI_API_KEY nei segreti dell'app.";
+      } else if (error?.message?.includes('quota')) {
+        errorMessage = "Limite di messaggi raggiunto per oggi. Riprova più tardi.";
+      }
+      
       setMessages(prev => [
         ...prev,
-        { role: 'model', parts: [{ text: "Si è verificato un errore nella sessione. Riprova tra un momento." }] }
+        { role: 'model', parts: [{ text: errorMessage }] }
       ]);
     } finally {
       setIsLoading(false);

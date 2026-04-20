@@ -31,33 +31,54 @@ export interface Message {
   parts: [{ text: string }];
 }
 
-export async function chat(messages: Message[]) {
-  const model = "gemini-3-flash-preview";
-  
-  // The SDK expects contents as an array of Content objects
-  const response = await ai.models.generateContent({
-    model,
-    contents: messages,
-    config: {
-      systemInstruction: SYSTEM_INSTRUCTION,
-    }
-  });
+function validateApiKey() {
+  if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'undefined') {
+    throw new Error('GEMINI_API_KEY is missing. Please configure it in your environment variables/secrets.');
+  }
+}
 
-  return response.text;
+export async function chat(messages: Message[]) {
+  validateApiKey();
+  const model = "gemini-3.1-pro-preview";
+  
+  try {
+    const response = await ai.models.generateContent({
+      model,
+      contents: messages,
+      config: {
+        systemInstruction: SYSTEM_INSTRUCTION,
+        temperature: 0.7,
+      }
+    });
+
+    return response.text;
+  } catch (error) {
+    console.error('Gemini API Error:', error);
+    throw error;
+  }
 }
 
 export async function* chatStream(messages: Message[]) {
-  const model = "gemini-3-flash-preview";
+  validateApiKey();
+  const model = "gemini-3.1-pro-preview";
   
-  const response = await ai.models.generateContentStream({
-    model,
-    contents: messages,
-    config: {
-      systemInstruction: SYSTEM_INSTRUCTION,
-    }
-  });
+  try {
+    const response = await ai.models.generateContentStream({
+      model,
+      contents: messages,
+      config: {
+        systemInstruction: SYSTEM_INSTRUCTION,
+        temperature: 0.7,
+      }
+    });
 
-  for await (const chunk of response) {
-    yield chunk.text;
+    for await (const chunk of response) {
+      if (chunk.text) {
+        yield chunk.text;
+      }
+    }
+  } catch (error) {
+    console.error('Gemini Stream API Error:', error);
+    throw error;
   }
 }
