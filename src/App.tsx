@@ -20,10 +20,39 @@ export default function App() {
   const progress = Math.min(Math.round((messages.length / 10) * 100), 100);
 
   const suggestedTopics = [
-    { title: "Algebra", prompt: "Iniziamo con le equazioni di primo grado." },
-    { title: "Geometria", prompt: "Spiegami il teorema di Pitagora in modo intuitivo." },
-    { title: "Analisi", prompt: "Cosa sono le derivate e perché le usiamo?" },
+    { 
+      title: "Algebra", 
+      prompts: [
+        "Aiutami con le equazioni di primo grado.",
+        "Cosa sono i prodotti notevoli?",
+        "Spiegami come risolvere un sistema lineare.",
+        "Vorrei capire meglio la scomposizione in fattori dei polinomi."
+      ]
+    },
+    { 
+      title: "Geometria", 
+      prompts: [
+        "Spiegami il teorema di Pitagora in modo intuitivo.",
+        "Come si calcola l'area del cerchio?",
+        "Quali sono le proprietà principali dei triangoli simili?",
+        "Ho bisogno di aiuto con i teoremi di Euclide."
+      ]
+    },
+    { 
+      title: "Analisi", 
+      prompts: [
+        "Cosa sono le derivate e perché le usiamo?",
+        "Spiegami il concetto di limite in matematica.",
+        "Cos'è un integrale e a cosa serve?",
+        "Come si fa lo studio di una funzione?"
+      ]
+    },
   ];
+
+  const handleTopicClick = (prompts: string[]) => {
+    const randomPrompt = prompts[Math.floor(Math.random() * prompts.length)];
+    handleSend(randomPrompt);
+  };
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -61,10 +90,10 @@ export default function App() {
       console.error('Chat error:', error);
       let errorMessage = "Si è verificato un errore nella sessione. Riprova tra un momento.";
       
-      if (error?.message?.includes('GEMINI_API_KEY')) {
-        errorMessage = "Chiave API mancante. Assicurati di aver configurato GEMINI_API_KEY nei segreti dell'app.";
-      } else if (error?.message?.includes('quota')) {
-        errorMessage = "Limite di messaggi raggiunto per oggi. Riprova più tardi.";
+      if (error?.message?.includes('API_KEY_ERROR') || error?.message?.includes('GEMINI_API_KEY')) {
+        errorMessage = "Chiave API non configurata correttamente su Vercel. Verifica le Environment Variables e fai un redeploy.";
+      } else if (error?.message?.includes('quota') || error?.message?.includes('429')) {
+        errorMessage = "Limite di messaggi raggiunto per oggi (Quota Exceeded). Riprova più tardi.";
       }
       
       setMessages(prev => [
@@ -146,7 +175,7 @@ export default function App() {
                       {suggestedTopics.map((topic) => (
                         <button
                           key={topic.title}
-                          onClick={() => handleSend(topic.prompt)}
+                          onClick={() => handleTopicClick(topic.prompts)}
                           className="border border-[#1A1A1A] px-6 py-3 text-xs font-bold uppercase tracking-widest hover:bg-[#1A1A1A] hover:text-white transition-all active:scale-95"
                         >
                           {topic.title}
@@ -258,12 +287,6 @@ export default function App() {
               </p>
             </div>
 
-            <div className="mt-12">
-              <button className="w-full flex items-center justify-between border-b border-[#1A1A1A] pb-2 text-[10px] font-bold uppercase tracking-widest hover:opacity-50 transition-opacity">
-                Approfondimento Teorico
-                <ArrowRight className="w-3 h-3" />
-              </button>
-            </div>
           </aside>
         </div>
       </div>

@@ -32,8 +32,9 @@ export interface Message {
 }
 
 function validateApiKey() {
-  if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'undefined') {
-    throw new Error('GEMINI_API_KEY is missing. Please configure it in your environment variables/secrets.');
+  const key = process.env.GEMINI_API_KEY;
+  if (!key || key === 'undefined' || key === '' || key === 'MY_GEMINI_API_KEY') {
+    throw new Error('API_KEY_ERROR: GEMINI_API_KEY is missing or invalid. Check your Vercel/Environment settings.');
   }
 }
 
