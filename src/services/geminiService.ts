@@ -32,7 +32,9 @@ export interface Message {
 }
 
 function validateApiKey() {
-  const key = process.env.GEMINI_API_KEY;
+  // Check multiple possible sources for the API key
+  const key = process.env.GEMINI_API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY;
+  
   if (!key || key === 'undefined' || key === '' || key === 'MY_GEMINI_API_KEY') {
     throw new Error('API_KEY_ERROR: GEMINI_API_KEY is missing or invalid. Check your Vercel/Environment settings.');
   }
