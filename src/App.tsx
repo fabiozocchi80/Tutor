@@ -4,7 +4,7 @@
  */
 
 import { useState, useRef, useEffect } from 'react';
-import { Send, User, Bot, Sparkles, PlusCircle, Trash2, ArrowRight, BrainCircuit, BookOpen } from 'lucide-react';
+import { Send, User, Bot, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Message, chatStream } from './services/geminiService';
 import MathMarkdown from './components/MathMarkdown';
@@ -15,9 +15,6 @@ export default function App() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-
-  // Derived progress
-  const progress = Math.min(Math.round((messages.length / 10) * 100), 100);
 
   const suggestedTopics = [
     { 
@@ -132,16 +129,6 @@ export default function App() {
             <h1 className="font-serif text-2xl md:text-3xl italic text-[#1A1A1A]">MathMentor AI</h1>
           </div>
           <div className="flex flex-col items-end gap-2">
-            <div className="flex gap-4 items-center">
-              <div className="h-1.5 w-24 md:w-48 rounded-full bg-[#1A1A1A]/5 overflow-hidden">
-                <motion.div 
-                  className="h-full bg-[#1A1A1A]" 
-                  initial={{ width: 0 }}
-                  animate={{ width: `${progress}%` }}
-                />
-              </div>
-              <span className="text-[10px] font-bold whitespace-nowrap tracking-wider">{progress}% COMPLETATO</span>
-            </div>
             <button 
               onClick={clearChat}
               className="text-[10px] font-bold uppercase tracking-widest text-red-600 hover:opacity-60 transition-opacity"
@@ -251,25 +238,46 @@ export default function App() {
           {/* Right Panel: Scaffolding / Theory */}
           <aside className="hidden lg:flex col-span-4 border-l border-[#1A1A1A]/10 bg-[#F6F4F0] p-10 flex-col overflow-y-auto">
             <div className="mb-12">
-              <h3 className="mb-8 font-serif text-xl italic underline underline-offset-8 decoration-[#1A1A1A]/20">Concetti Fondamentali</h3>
+              <h3 className="mb-8 font-serif text-xl italic underline underline-offset-8 decoration-[#1A1A1A]/20">Link Utili</h3>
               <ul className="space-y-8">
                 <li>
-                  <span className="block text-[10px] font-bold uppercase tracking-widest text-[#1A1A1A]/40 mb-2">01. Ordine delle Operazioni</span>
-                  <p className="text-sm leading-relaxed text-[#1A1A1A]/80 font-serif">
-                    Ricorda l'acronimo <span className="italic">PEMDAS</span>: Parentesi, Esponenti, Moltiplicazione e Divisione, Addizione e Sottrazione.
-                  </p>
+                  <a 
+                    href="https://www.wolframalpha.com/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="group"
+                  >
+                    <span className="block text-[10px] font-bold uppercase tracking-widest text-[#1A1A1A]/40 mb-2 group-hover:text-[#1A1A1A] transition-colors">01. WolframAlpha</span>
+                    <p className="text-sm leading-relaxed text-[#1A1A1A]/80 font-serif group-hover:underline">
+                      Il motore computazionale più potente per risolvere equazioni e visualizzare grafici complessi.
+                    </p>
+                  </a>
                 </li>
                 <li>
-                  <span className="block text-[10px] font-bold uppercase tracking-widest text-[#1A1A1A]/40 mb-2">02. Proprietà Invariantiva</span>
-                  <p className="text-sm leading-relaxed text-[#1A1A1A]/80 font-serif">
-                    L'essenza dell'algebra: ciò che fai a un membro, devi farlo anche all'altro per mantenere l'equilibrio.
-                  </p>
+                  <a 
+                    href="https://www.geogebra.org/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="group"
+                  >
+                    <span className="block text-[10px] font-bold uppercase tracking-widest text-[#1A1A1A]/40 mb-2 group-hover:text-[#1A1A1A] transition-colors">02. GeoGebra</span>
+                    <p className="text-sm leading-relaxed text-[#1A1A1A]/80 font-serif group-hover:underline">
+                      Strumento interattivo per esplorare geometria, algebra, fogli di calcolo e molto altro.
+                    </p>
+                  </a>
                 </li>
                 <li>
-                  <span className="block text-[10px] font-bold uppercase tracking-widest text-[#1A1A1A]/40 mb-2">03. Astrazione</span>
-                  <p className="text-sm leading-relaxed text-[#1A1A1A]/80 font-serif">
-                    Le lettere sono contenitori di possibilità. Imparare a vederle come numeri ignoti libera il pensiero.
-                  </p>
+                  <a 
+                    href="https://www.youmath.it/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="group"
+                  >
+                    <span className="block text-[10px] font-bold uppercase tracking-widest text-[#1A1A1A]/40 mb-2 group-hover:text-[#1A1A1A] transition-colors">03. YouMath</span>
+                    <p className="text-sm leading-relaxed text-[#1A1A1A]/80 font-serif group-hover:underline">
+                      Il portale di riferimento in italiano per lezioni, esercizi e spiegazioni chiare di ogni argomento.
+                    </p>
+                  </a>
                 </li>
               </ul>
             </div>

@@ -46,7 +46,7 @@ function validateApiKey() {
 
 export async function chat(messages: Message[]) {
   validateApiKey();
-  const model = "gemini-3-flash-preview";
+  const model = "gemini-flash-latest";
   
   try {
     const response = await ai.models.generateContent({
@@ -67,7 +67,7 @@ export async function chat(messages: Message[]) {
 
 export async function* chatStream(messages: Message[]) {
   validateApiKey();
-  const model = "gemini-3-flash-preview";
+  const model = "gemini-flash-latest";
   
   try {
     const response = await ai.models.generateContentStream({
