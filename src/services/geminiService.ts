@@ -32,10 +32,14 @@ export interface Message {
 }
 
 function validateApiKey() {
-  // Check multiple possible sources for the API key
-  const key = process.env.GEMINI_API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY;
+  // Try to find the key in various common places where Vite or Webpack might inject it
+  const key = 
+    (process.env.GEMINI_API_KEY) || 
+    (import.meta as any).env?.VITE_GEMINI_API_KEY ||
+    (import.meta as any).env?.GEMINI_API_KEY;
   
   if (!key || key === 'undefined' || key === '' || key === 'MY_GEMINI_API_KEY') {
+    console.error("API Key Validation Failed. Sources checked: process.env, import.meta.env");
     throw new Error('API_KEY_ERROR: GEMINI_API_KEY is missing or invalid. Check your Vercel/Environment settings.');
   }
 }
